@@ -1,0 +1,17 @@
+int main(){
+	int val#
+	int num = 12#
+	int num2 =2+1#
+	int num3 = 5/5#
+	int num4 = 5*5#
+	val = 7#
+	int num5 = 10-2#
+	float num6#
+	float num7 = 15.7 / 15.7#
+	float num8 = 16.7#
+	float num9 = 15.5 + 15.5#
+	float num10 = 15.6 * 17.6#
+	float num11 = 15.5 - 20.2#
+	num6 = 67.2#
+}
+

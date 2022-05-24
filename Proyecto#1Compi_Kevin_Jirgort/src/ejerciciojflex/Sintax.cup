@@ -1,0 +1,136 @@
+package ejerciciojflex;
+import java.util.ArrayList;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    public ArrayList<Object> listaIdentificadores = new ArrayList<Object>(); 
+    public int cont = 0;
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal Tipo,Nulo,Flotante,ExprLogica,Boolean,Asig,Separador,ExprFinal,Comillas,
+Comparador,Cadena,EstruControl,Entero,Operador,Id,Char,Int,String,If,Else,DecInc,
+While,For,Switch,Return,Break,Case,Default,Print,Multiplicacion,Suma,Resta,Parametros,
+Division,ParentesisC,ParentesisA,LlaveC,LlaveA,main,CorcheteA,CorcheteC,Coma,DosPuntos,Read,
+ERROR,Float;
+non terminal INICIO, SENTENCIA,DECLARACION_ENTEROS,DECLARACION_FLOAT; 
+
+start with INICIO;
+
+INICIO ::= Int main ParentesisA ParentesisC LlaveA SENTENCIA LlaveC 
+;
+SENTENCIA::=DECLARACION_ENTEROS|SENTENCIA DECLARACION_ENTEROS|DECLARACION_FLOAT|SENTENCIA DECLARACION_FLOAT
+;
+DECLARACION_ENTEROS::=Int:n1 Id:n2 ExprFinal{:
+                 parser.listaIdentificadores.add(n1);
+                 parser.listaIdentificadores.add(n2);
+                 parser.listaIdentificadores.add(0);
+                 System.out.println("Declaracion de variable entera " + n2 + " sin valor");:}
+                |Int:n1 Id:n2 Asig Entero:n3 Division Entero:n4 ExprFinal {:
+                  parser.listaIdentificadores.add(n1);
+                  parser.listaIdentificadores.add(n2);
+                  parser.listaIdentificadores.add(Integer.valueOf(n3.toString())/Integer.valueOf(n4.toString()));
+                  System.out.println("Declaracion de variable entera " + n2 + " por medio de la Division: " +n3+ " / " +n4 );:}
+               |Int:n1 Id:n2 Asig Entero:n3 ExprFinal{:
+                  parser.listaIdentificadores.add(n1);
+                  parser.listaIdentificadores.add(n2);
+                  parser.listaIdentificadores.add(n3);
+                  System.out.println("Declaracion de variable entera "+ n2 + " con valor " + n3);:}
+               |Int:n1 Id:n2 Asig Entero:n3 Suma Entero:n4 ExprFinal {:
+                  parser.listaIdentificadores.add(n1);
+                  parser.listaIdentificadores.add(n2);
+                  parser.listaIdentificadores.add(Integer.valueOf(n3.toString())+Integer.valueOf(n4.toString()));
+                  System.out.println("Declaracion de variable entera " + n2 + " por medio de la suma " + n3 + " + " +n4);:}
+               |Int:n1 Id:n2 Asig Entero:n3 Multiplicacion Entero:n4 ExprFinal {:
+                  parser.listaIdentificadores.add(n1);
+                  parser.listaIdentificadores.add(n2);
+                  parser.listaIdentificadores.add(Integer.valueOf(n3.toString())*Integer.valueOf(n4.toString()));
+                  System.out.println("Declaracion de variable entera " + n2 + " por medio de la Multiplicacion " + n3 + " * " +n4);:}
+               |Int:n1 Id:n2 Asig Entero:n3 Resta Entero:n4 ExprFinal {:
+                  parser.listaIdentificadores.add(n1);
+                  parser.listaIdentificadores.add(n2);
+                  parser.listaIdentificadores.add(Integer.valueOf(n3.toString())-Integer.valueOf(n4.toString()));
+                  System.out.println("Declaracion de variable entera " + n2 + " por medio de la Resta " + n3 + " - " +n4);:}
+               |Id:n1 Asig Entero:n2 ExprFinal {:
+                boolean bandera = false;
+                for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n1)){
+                        if(parser.listaIdentificadores.get(i-1).equals("int")){
+                            parser.listaIdentificadores.set(i+1,n2);
+                            System.out.println("Declaracion de la variable " + n1 + " Se le asigno el valor: " + n2);
+                            bandera = true;
+                            break;
+                        }else{
+                            System.out.println("La variable encontrada no es de tipo entero");
+                        }
+                    }
+                }
+                if(bandera){
+
+                }else{
+                    System.out.println("La variable " + n1 + " no ha sido declarada");
+                }
+               :}
+;
+
+DECLARACION_FLOAT::=Float:n1 Id:n2 ExprFinal{:
+                 parser.listaIdentificadores.add(n1);
+                 parser.listaIdentificadores.add(n2);
+                 parser.listaIdentificadores.add(0);
+                 System.out.println("Declaracion de variable Flotante: " +n2 + " sin valor");:}
+                |Float:n1 Id:n2 Asig Flotante:n3 Division Flotante:n4 ExprFinal {:
+                  parser.listaIdentificadores.add(n1);
+                  parser.listaIdentificadores.add(n2);
+                  parser.listaIdentificadores.add(Float.valueOf(n3.toString())/Float.valueOf(n4.toString()));
+                  System.out.println("Declaracion de variable Flotante " + n2 + " por medio de la Division: " +n3+ " / " +n4 );:}
+                |Float:n1 Id:n2 Asig Flotante:n3 ExprFinal{:
+                  parser.listaIdentificadores.add(n1);
+                  parser.listaIdentificadores.add(n2);
+                  parser.listaIdentificadores.add(n3);
+                  System.out.println("Declaracion de variable Flotante "+ n2 + " con valor " + n3);:}
+                |Float:n1 Id:n2 Asig Flotante:n3 Suma Flotante:n4 ExprFinal {:
+                  parser.listaIdentificadores.add(n1);
+                  parser.listaIdentificadores.add(n2);
+                  parser.listaIdentificadores.add(Float.valueOf(n3.toString())+Float.valueOf(n4.toString()));
+                  System.out.println("Declaracion de variable Flotante " + n2 + " por medio de la suma " + n3 + " + " +n4);:}
+                |Float:n1 Id:n2 Asig Flotante:n3 Multiplicacion Flotante:n4 ExprFinal {:
+                  parser.listaIdentificadores.add(n1);
+                  parser.listaIdentificadores.add(n2);
+                  parser.listaIdentificadores.add(Float.valueOf(n3.toString())*Float.valueOf(n4.toString()));
+                  System.out.println("Declaracion de variable Flotante " + n2 + " por medio de la Multiplicacion " + n3 + " * " +n4);:}
+                |Float:n1 Id:n2 Asig Flotante:n3 Resta Flotante:n4 ExprFinal {:
+                  parser.listaIdentificadores.add(n1);
+                  parser.listaIdentificadores.add(n2);
+                  parser.listaIdentificadores.add(Float.valueOf(n3.toString())-Float.valueOf(n4.toString()));
+                  System.out.println("Declaracion de variable Flotante " + n2 + " por medio de la Resta " + n3 + " - " +n4);:}
+                |Id:n1 Asig Flotante:n2 ExprFinal {:
+                boolean bandera = false;
+                for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n1)){
+                        if(parser.listaIdentificadores.get(i-1).equals("float")){
+                            parser.listaIdentificadores.set(i+1,n2);
+                            System.out.println("Declaracion de la variable " + n1 + " Se le asigno el valor: " + n2);
+                            bandera = true;
+                            break;
+                        }else{
+                            System.out.println("La variable encontrada no es de tipo flotante");
+                        }
+                    }
+                }
+                if(bandera){
+
+                }else{
+                    System.out.println("La variable " + n1 + " no ha sido declarada");
+                }
+               :}
+;
