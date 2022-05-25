@@ -9,7 +9,7 @@ import java_cup.runtime.Symbol;
 %char
 
 boolean= ("true" | "false")+
-tipo = "boolean" |"char"|"double"|"string"
+tipo = "boolean" |"char"|"double"
 Asig="="
 letra=[a-zA-Z] 
 nulo="null"
