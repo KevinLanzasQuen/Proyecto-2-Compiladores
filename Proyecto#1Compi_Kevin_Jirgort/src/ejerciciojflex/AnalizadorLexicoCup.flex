@@ -9,7 +9,7 @@ import java_cup.runtime.Symbol;
 %char
 
 boolean= ("true" | "false")+
-tipo = "boolean" |"char"|"double"
+tipo = "double"
 Asig="="
 letra=[a-zA-Z] 
 nulo="null"
@@ -73,6 +73,14 @@ SaltoDeLinea = \n|\r|\r\n
 ("float") {return new Symbol(sym.Float, yychar, yyline, yytext());}
 
 ("string") {return new Symbol(sym.String, yychar, yyline, yytext());}
+
+("char") {return new Symbol(sym.CharType, yychar, yyline, yytext());}
+
+("bool") {return new Symbol(sym.Bool, yychar, yyline, yytext());}
+
+("true") {return new Symbol(sym.True, yychar, yyline, yytext());}
+
+("false") {return new Symbol(sym.False, yychar, yyline, yytext());}
 
 ("if") {return new Symbol(sym.If, yychar, yyline, yytext());}
 

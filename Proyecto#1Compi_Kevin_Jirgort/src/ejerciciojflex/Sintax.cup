@@ -22,14 +22,15 @@ terminal Tipo,Nulo,Flotante,ExprLogica,Boolean,Asig,Separador,ExprFinal,Comillas
 Comparador,Cadena,EstruControl,Entero,Operador,Id,Char,Int,String,If,Else,DecInc,
 While,For,Switch,Return,Break,Case,Default,Print,Multiplicacion,Suma,Resta,Parametros,
 Division,ParentesisC,ParentesisA,LlaveC,LlaveA,main,CorcheteA,CorcheteC,Coma,DosPuntos,Read,
-ERROR,Float;
-non terminal INICIO, SENTENCIA,DECLARACION_ENTEROS,DECLARACION_FLOAT,DECLARACION_STRING; 
+ERROR,Float,CharType,Bool,True,False;
+non terminal INICIO, SENTENCIA,DECLARACION_ENTEROS,DECLARACION_FLOAT,DECLARACION_STRING,DECLARACION_CHAR,DECLARACION_BOOLEAN; 
 
 start with INICIO;
 
 INICIO ::= Int main ParentesisA ParentesisC LlaveA SENTENCIA LlaveC 
 ;
-SENTENCIA::=DECLARACION_ENTEROS|SENTENCIA DECLARACION_ENTEROS|DECLARACION_FLOAT|SENTENCIA DECLARACION_FLOAT|DECLARACION_STRING|SENTENCIA DECLARACION_STRING
+SENTENCIA::=DECLARACION_ENTEROS|SENTENCIA DECLARACION_ENTEROS|DECLARACION_FLOAT|SENTENCIA DECLARACION_FLOAT|DECLARACION_STRING|SENTENCIA DECLARACION_STRING|DECLARACION_CHAR|
+SENTENCIA DECLARACION_CHAR|DECLARACION_BOOLEAN|SENTENCIA DECLARACION_BOOLEAN
 ;
 DECLARACION_ENTEROS::=Int:n1 Id:n2 ExprFinal{:
                  parser.listaIdentificadores.add(n1);
@@ -67,20 +68,353 @@ DECLARACION_ENTEROS::=Int:n1 Id:n2 ExprFinal{:
                     if(parser.listaIdentificadores.get(i).equals(n1)){
                         if(parser.listaIdentificadores.get(i-1).equals("int")){
                             parser.listaIdentificadores.set(i+1,n2);
-                            System.out.println("Declaracion de la variable " + n1 + " Se le asigno el valor: " + n2);
+                            System.out.println("Asignacion de la variable " + n1 + " Se le asigno el valor: " + n2);
                             bandera = true;
                             break;
                         }else{
-                            System.out.println("La variable encontrada no es de tipo entero");
+                            System.out.println("ERROR: LA VARIABLE ENCONTRADA NO ES DE TIPO ENTERO");
                         }
                     }
                 }
                 if(bandera){
 
                 }else{
-                    System.out.println("La variable " + n1 + " no ha sido declarada");
+                    System.out.println("ERROR:LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
                 }
                :}
+              |Int:n1 Id:n2 Asig Id:n3 ExprFinal {:
+                 boolean bandera = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n3)){
+                        if(parser.listaIdentificadores.get(i-1).equals("int")){
+                            parser.listaIdentificadores.add(n1);
+                            parser.listaIdentificadores.add(n2);
+                            parser.listaIdentificadores.add(parser.listaIdentificadores.get(i+1));
+                            System.out.println("Asignacion de la variable " + n2 + " Se le asigno el valor: " + parser.listaIdentificadores.get(i+1));
+                            bandera = true;
+                            break;
+                        }else{
+                            System.out.println("ERROR: LA VARIABLE ENCONTRADA NO ES DE TIPO ENTERO");
+                        }
+                    }
+                }
+                if(bandera){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
+                }:}
+              |Int:n1 Id:n2 Asig Id:n3 Suma Id:n4 ExprFinal{:
+                 boolean bandera = false;
+                 boolean bandera2 = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n3)){
+                        if(parser.listaIdentificadores.get(i-1).equals("int")){
+                            bandera2 = true;
+                            for(int j = 1;j < parser.listaIdentificadores.size();j=j+3){
+                                if(parser.listaIdentificadores.get(j).equals(n4)){
+                                    if(parser.listaIdentificadores.get(j-1).equals("int")){
+                                        parser.listaIdentificadores.add(n1);
+                                        parser.listaIdentificadores.add(n2);
+                                        parser.listaIdentificadores.add(Integer.valueOf(parser.listaIdentificadores.get(i+1).toString()) + Integer.valueOf(parser.listaIdentificadores.get(j+1).toString()));
+                                        System.out.println("Asignacion de la variable " + n2 + " Se le asigno el valor: " + (Integer.valueOf(parser.listaIdentificadores.get(i+1).toString()) + Integer.valueOf(parser.listaIdentificadores.get(j+1).toString())));
+                                        bandera = true;
+                                        break;
+                                    }else{
+                                       System.out.println("ERROR: LA VARIABLE " + n4 + " NO ES DE TIPO ENTERO");
+                                    }
+                                }
+                            }if(bandera){
+                                break;
+                            }else{
+                                System.out.println("ERROR:LA VARIABLE " + n4 + " NO HA SIDO DECLARADA");
+                            }
+                        }else{
+                            System.out.println("ERROR: LA VARIABLE "+n3+ " NO ES DE TIPO ENTERO");
+                        }
+                    }
+                }
+                if(bandera2){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n3 + " NO HA SIDO DECLARADA");
+                }:}
+              |Int:n1 Id:n2 Asig Id:n3 Resta Id:n4 ExprFinal{:
+                 boolean bandera = false;
+                 boolean bandera2 = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n3)){
+                        if(parser.listaIdentificadores.get(i-1).equals("int")){
+                            bandera2 = true;
+                            for(int j = 1;j < parser.listaIdentificadores.size();j=j+3){
+                                if(parser.listaIdentificadores.get(j).equals(n4)){
+                                    if(parser.listaIdentificadores.get(j-1).equals("int")){
+                                        parser.listaIdentificadores.add(n1);
+                                        parser.listaIdentificadores.add(n2);
+                                        parser.listaIdentificadores.add(Integer.valueOf(parser.listaIdentificadores.get(i+1).toString()) - Integer.valueOf(parser.listaIdentificadores.get(j+1).toString()));
+                                        System.out.println("Asignacion de la variable " + n2 + " Se le asigno el valor: " + (Integer.valueOf(parser.listaIdentificadores.get(i+1).toString()) - Integer.valueOf(parser.listaIdentificadores.get(j+1).toString())));
+                                        bandera = true;
+                                        break;
+                                    }else{
+                                       System.out.println("ERROR: LA VARIABLE " + n4 + " NO ES DE TIPO ENTERO");
+                                    }
+                                }
+                            }if(bandera){
+                                break;
+                            }else{
+                                System.out.println("ERROR:LA VARIABLE " + n4 + " NO HA SIDO DECLARADA");
+                            }
+                        }else{
+                            System.out.println("ERROR: LA VARIABLE " + n3 + " NO ES DE TIPO ENTERO");
+                        }
+                    }
+                }
+                if(bandera2){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n3 + " NO HA SIDO DECLARADA");
+                }:}
+              |Int:n1 Id:n2 Asig Id:n3 Multiplicacion Id:n4 ExprFinal{:
+                 boolean bandera = false;
+                 boolean bandera2 = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n3)){
+                        if(parser.listaIdentificadores.get(i-1).equals("int")){
+                            bandera2 = true;
+                            for(int j = 1;j < parser.listaIdentificadores.size();j=j+3){
+                                if(parser.listaIdentificadores.get(j).equals(n4)){
+                                    if(parser.listaIdentificadores.get(j-1).equals("int")){
+                                        parser.listaIdentificadores.add(n1);
+                                        parser.listaIdentificadores.add(n2);
+                                        parser.listaIdentificadores.add(Integer.valueOf(parser.listaIdentificadores.get(i+1).toString()) * Integer.valueOf(parser.listaIdentificadores.get(j+1).toString()));
+                                        System.out.println("Asignacion de la variable " + n2 + " Se le asigno el valor: " + (Integer.valueOf(parser.listaIdentificadores.get(i+1).toString()) * Integer.valueOf(parser.listaIdentificadores.get(j+1).toString())));
+                                        bandera = true;
+                                        break;
+                                    }else{
+                                       System.out.println("ERROR: LA VARIABLE " + n4 + " NO ES DE TIPO ENTERO");
+                                    }
+                                }
+                            }if(bandera){
+                                break;
+                            }else{
+                                System.out.println("ERROR:LA VARIABLE " + n4 + " NO HA SIDO DECLARADA");
+                            }
+                        }else{
+                            System.out.println("ERROR: LA VARIABLE " + n3 + " NO ES DE TIPO ENTERO");
+                        }
+                    }
+                }
+                if(bandera2){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n3 + " NO HA SIDO DECLARADA");
+                }:}
+              |Int:n1 Id:n2 Asig Id:n3 Division Id:n4 ExprFinal{:
+                 boolean bandera = false;
+                 boolean bandera2 = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n3)){
+                        if(parser.listaIdentificadores.get(i-1).equals("int")){
+                            bandera2 = true;
+                            for(int j = 1;j < parser.listaIdentificadores.size();j=j+3){
+                                if(parser.listaIdentificadores.get(j).equals(n4)){
+                                    if(parser.listaIdentificadores.get(j-1).equals("int")){
+                                        parser.listaIdentificadores.add(n1);
+                                        parser.listaIdentificadores.add(n2);
+                                        parser.listaIdentificadores.add(Integer.valueOf(parser.listaIdentificadores.get(i+1).toString()) / Integer.valueOf(parser.listaIdentificadores.get(j+1).toString()));
+                                        System.out.println("Asignacion de la variable " + n2 + " Se le asigno el valor: " + (Integer.valueOf(parser.listaIdentificadores.get(i+1).toString()) / Integer.valueOf(parser.listaIdentificadores.get(j+1).toString())));
+                                        bandera = true;
+                                        break;
+                                    }else{
+                                       System.out.println("ERROR: LA VARIABLE " + n4 + " NO ES DE TIPO ENTERO");
+                                    }
+                                }
+                            }if(bandera){
+                                break;
+                            }else{
+                                System.out.println("ERROR:LA VARIABLE " + n4 + " NO HA SIDO DECLARADA");
+                            }
+                        }else{
+                            System.out.println("ERROR: LA VARIABLE " + n3 + " NO ES DE TIPO ENTERO");
+                        }
+                    }
+                }
+                if(bandera2){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n3 + " NO HA SIDO DECLARADA");
+                }:}
+              |Id:n1 Asig Id:n2 Suma Id:n3 ExprFinal {:
+                 boolean bandera = false;
+                 boolean bandera2 = false;
+                 boolean bandera3 = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n1)){
+                            bandera2 = true;
+                            for(int j = 1;j < parser.listaIdentificadores.size();j=j+3){
+                                if(parser.listaIdentificadores.get(j).equals(n2)){
+                                        bandera3 = true;
+                                        for(int x = 1;x < parser.listaIdentificadores.size();x=x+3){
+                                            if(parser.listaIdentificadores.get(x).equals(n3)){
+                                                if(parser.listaIdentificadores.get(i-1).equals(parser.listaIdentificadores.get(j-1))){
+                                                    if(parser.listaIdentificadores.get(j-1).equals(parser.listaIdentificadores.get(x-1))){
+                                                        parser.listaIdentificadores.set(i+1,Float.valueOf(parser.listaIdentificadores.get(j+1).toString())+Float.valueOf(parser.listaIdentificadores.get(x+1).toString()));
+                                                        System.out.println("Asignacion de la variable " + n1 + " Se le asigno el valor: " + (Float.valueOf(parser.listaIdentificadores.get(j+1).toString())+Float.valueOf(parser.listaIdentificadores.get(x+1).toString())));
+                                                        bandera = true;
+                                                        break;
+                                                    }else{
+                                                        System.out.println("ERROR: LAS VARIABLES NO SON DEL MISMO TIPO");
+                                                    }
+                                                }else{
+                                                     System.out.println("ERROR: LAS VARIABLES NO SON DEL MISMO TIPO");
+                                                }
+                                            }
+                                        }if(bandera){
+                                            break;
+                                        }else{
+                                            System.out.println("ERROR:LA VARIABLE " + n3 + " NO HA SIDO DECLARADA");
+                                        }
+                                }
+                            }if(bandera3){
+                                break;
+                            }else{
+                                System.out.println("ERROR:LA VARIABLE " + n2 + " NO HA SIDO DECLARADA");
+                            }
+                    }
+                }
+                if(bandera2){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
+                }:}
+               |Id:n1 Asig Id:n2 Resta Id:n3 ExprFinal {:
+                 boolean bandera = false;
+                 boolean bandera2 = false;
+                 boolean bandera3 = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n1)){
+                            bandera2 = true;
+                            for(int j = 1;j < parser.listaIdentificadores.size();j=j+3){
+                                if(parser.listaIdentificadores.get(j).equals(n2)){
+                                        bandera3 = true;
+                                        for(int x = 1;x < parser.listaIdentificadores.size();x=x+3){
+                                            if(parser.listaIdentificadores.get(x).equals(n3)){
+                                                if(parser.listaIdentificadores.get(i-1).equals(parser.listaIdentificadores.get(j-1))){
+                                                    if(parser.listaIdentificadores.get(j-1).equals(parser.listaIdentificadores.get(x-1))){
+                                                        parser.listaIdentificadores.set(i+1,Float.valueOf(parser.listaIdentificadores.get(j+1).toString())-Float.valueOf(parser.listaIdentificadores.get(x+1).toString()));
+                                                        System.out.println("Asignacion de la variable " + n1 + " Se le asigno el valor: " + (Float.valueOf(parser.listaIdentificadores.get(j+1).toString())-Float.valueOf(parser.listaIdentificadores.get(x+1).toString())));
+                                                        bandera = true;
+                                                        break;
+                                                    }else{
+                                                        System.out.println("ERROR: LAS VARIABLES NO SON DEL MISMO TIPO");
+                                                    }
+                                                }else{
+                                                     System.out.println("ERROR: LAS VARIABLES NO SON DEL MISMO TIPO");
+                                                }
+                                            }
+                                        }if(bandera){
+                                            break;
+                                        }else{
+                                            System.out.println("ERROR:LA VARIABLE " + n3 + " NO HA SIDO DECLARADA");
+                                        }
+                                }
+                            }if(bandera3){
+                                break;
+                            }else{
+                                System.out.println("ERROR:LA VARIABLE " + n2 + " NO HA SIDO DECLARADA");
+                            }
+                    }
+                }
+                if(bandera2){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
+                }:}
+              |Id:n1 Asig Id:n2 Multiplicacion Id:n3 ExprFinal {:
+                 boolean bandera = false;
+                 boolean bandera2 = false;
+                 boolean bandera3 = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n1)){
+                            bandera2 = true;
+                            for(int j = 1;j < parser.listaIdentificadores.size();j=j+3){
+                                if(parser.listaIdentificadores.get(j).equals(n2)){
+                                        bandera3 = true;
+                                        for(int x = 1;x < parser.listaIdentificadores.size();x=x+3){
+                                            if(parser.listaIdentificadores.get(x).equals(n3)){
+                                                if(parser.listaIdentificadores.get(i-1).equals(parser.listaIdentificadores.get(j-1))){
+                                                    if(parser.listaIdentificadores.get(j-1).equals(parser.listaIdentificadores.get(x-1))){
+                                                        parser.listaIdentificadores.set(i+1,Float.valueOf(parser.listaIdentificadores.get(j+1).toString())*Float.valueOf(parser.listaIdentificadores.get(x+1).toString()));
+                                                        System.out.println("Asignacion de la variable " + n1 + " Se le asigno el valor: " + (Float.valueOf(parser.listaIdentificadores.get(j+1).toString())*Float.valueOf(parser.listaIdentificadores.get(x+1).toString())));
+                                                        bandera = true;
+                                                        break;
+                                                    }else{
+                                                        System.out.println("ERROR: LAS VARIABLES NO SON DEL MISMO TIPO");
+                                                    }
+                                                }else{
+                                                     System.out.println("ERROR: LAS VARIABLES NO SON DEL MISMO TIPO");
+                                                }
+                                            }
+                                        }if(bandera){
+                                            break;
+                                        }else{
+                                            System.out.println("ERROR:LA VARIABLE " + n3 + " NO HA SIDO DECLARADA");
+                                        }
+                                }
+                            }if(bandera3){
+                                break;
+                            }else{
+                                System.out.println("ERROR:LA VARIABLE " + n2 + " NO HA SIDO DECLARADA");
+                            }
+                    }
+                }
+                if(bandera2){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
+                }:}
+              |Id:n1 Asig Id:n2 Division Id:n3 ExprFinal {:
+                 boolean bandera = false;
+                 boolean bandera2 = false;
+                 boolean bandera3 = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n1)){
+                            bandera2 = true;
+                            for(int j = 1;j < parser.listaIdentificadores.size();j=j+3){
+                                if(parser.listaIdentificadores.get(j).equals(n2)){
+                                        bandera3 = true;
+                                        for(int x = 1;x < parser.listaIdentificadores.size();x=x+3){
+                                            if(parser.listaIdentificadores.get(x).equals(n3)){
+                                                if(parser.listaIdentificadores.get(i-1).equals(parser.listaIdentificadores.get(j-1))){
+                                                    if(parser.listaIdentificadores.get(j-1).equals(parser.listaIdentificadores.get(x-1))){
+                                                        parser.listaIdentificadores.set(i+1,Float.valueOf(parser.listaIdentificadores.get(j+1).toString())/Float.valueOf(parser.listaIdentificadores.get(x+1).toString()));
+                                                        System.out.println("Asignacion de la variable " + n1 + " Se le asigno el valor: " + (Float.valueOf(parser.listaIdentificadores.get(j+1).toString())/Float.valueOf(parser.listaIdentificadores.get(x+1).toString())));
+                                                        bandera = true;
+                                                        break;
+                                                    }else{
+                                                        System.out.println("ERROR: LAS VARIABLES NO SON DEL MISMO TIPO");
+                                                    }
+                                                }else{
+                                                     System.out.println("ERROR: LAS VARIABLES NO SON DEL MISMO TIPO");
+                                                }
+                                            }
+                                        }if(bandera){
+                                            break;
+                                        }else{
+                                            System.out.println("ERROR:LA VARIABLE " + n3 + " NO HA SIDO DECLARADA");
+                                        }
+                                }
+                            }if(bandera3){
+                                break;
+                            }else{
+                                System.out.println("ERROR:LA VARIABLE " + n2 + " NO HA SIDO DECLARADA");
+                            }
+                    }
+                }
+                if(bandera2){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
+                }:}
 ;
 DECLARACION_FLOAT::=Float:n1 Id:n2 ExprFinal{:
                  parser.listaIdentificadores.add(n1);
@@ -118,18 +452,40 @@ DECLARACION_FLOAT::=Float:n1 Id:n2 ExprFinal{:
                     if(parser.listaIdentificadores.get(i).equals(n1)){
                         if(parser.listaIdentificadores.get(i-1).equals("float")){
                             parser.listaIdentificadores.set(i+1,n2);
-                            System.out.println("Declaracion de la variable " + n1 + " Se le asigno el valor: " + n2);
+                            System.out.println("Asignacion de la variable " + n1 + " Se le asigno el valor: " + n2);
                             bandera = true;
                             break;
                         }else{
-                            System.out.println("La variable encontrada no es de tipo flotante");
+                            System.out.println("ERROR:LA VARIABLE ENCONTRADA NO ES DE TIPO FLOTANTE");
                         }
                     }
                 }
                 if(bandera){
 
                 }else{
-                    System.out.println("La variable " + n1 + " no ha sido declarada");
+                    System.out.println("ERROR:LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
+                }
+               :}
+              |Float:n1 Id:n2 Asig Id:n3 ExprFinal {:
+                 boolean bandera = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n3)){
+                        if(parser.listaIdentificadores.get(i-1).equals("float")){
+                            parser.listaIdentificadores.add(n1);
+                            parser.listaIdentificadores.add(n2);
+                            parser.listaIdentificadores.add(parser.listaIdentificadores.get(i+1));
+                            System.out.println("Asignacion de la variable " + n2 + " Se le asigno el valor: " + parser.listaIdentificadores.get(i+1));
+                            bandera = true;
+                            break;
+                        }else{
+                            System.out.println("ERROR: LA VARIABLE ENCONTRADA NO ES DE TIPO FLOTANTE");
+                        }
+                    }
+                }
+                if(bandera){
+
+                }else{
+                    System.out.println("ERROR: LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
                 }
                :}
                 |Float:n1 Id:n2 Asig Flotante:n3 Suma Entero:n4 ExprFinal {:
@@ -166,12 +522,152 @@ DECLARACION_FLOAT::=Float:n1 Id:n2 ExprFinal{:
                   parser.listaIdentificadores.add(n1);
                   parser.listaIdentificadores.add(n2);
                   parser.listaIdentificadores.add(Float.valueOf(n3.toString())-Integer.valueOf(n4.toString()));
-                  System.out.println("Declaracion de variable entera " + n2 + " por medio de la Resta " + n3 + " - " +n4);:}
+                  System.out.println("Declaracion de variable Flotante " + n2 + " por medio de la Resta " + n3 + " - " +n4);:}
                 |Float:n1 Id:n2 Asig Entero:n3 Resta Flotante:n4 ExprFinal {:
                   parser.listaIdentificadores.add(n1);
                   parser.listaIdentificadores.add(n2);
                   parser.listaIdentificadores.add(Integer.valueOf(n3.toString())-Float.valueOf(n4.toString()));
-                  System.out.println("Declaracion de variable entera " + n2 + " por medio de la Resta " + n3 + " - " +n4);:}     
+                  System.out.println("Declaracion de variable Flotante " + n2 + " por medio de la Resta " + n3 + " - " +n4);:}     
+                |Float:n1 Id:n2 Asig Id:n3 Suma Id:n4 ExprFinal{:
+                 boolean bandera = false;
+                 boolean bandera2 = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n3)){
+                        if(parser.listaIdentificadores.get(i-1).equals("float")){
+                            bandera2 = true;
+                            for(int j = 1;j < parser.listaIdentificadores.size();j=j+3){
+                                if(parser.listaIdentificadores.get(j).equals(n4)){
+                                    if(parser.listaIdentificadores.get(j-1).equals("float")){
+                                        parser.listaIdentificadores.add(n1);
+                                        parser.listaIdentificadores.add(n2);
+                                        parser.listaIdentificadores.add(Float.valueOf(parser.listaIdentificadores.get(i+1).toString()) + Float.valueOf(parser.listaIdentificadores.get(j+1).toString()));
+                                        System.out.println("Asignacion de la variable " + n2 + " Se le asigno el valor: " + (Float.valueOf(parser.listaIdentificadores.get(i+1).toString()) + Float.valueOf(parser.listaIdentificadores.get(j+1).toString())));
+                                        bandera = true;
+                                        break;
+                                    }else{
+                                       System.out.println("ERROR: LA VARIABLE " + n4 + " NO ES DE TIPO FLOTANTE");
+                                    }
+                                }
+                            }if(bandera){
+                                break;
+                            }else{
+                                System.out.println("ERROR:LA VARIABLE " + n4 + " NO HA SIDO DECLARADA");
+                            }
+                        }else{
+                            System.out.println("ERROR: LA VARIABLE "+n3+ " NO ES DE TIPO FLOTANTE");
+                        }
+                    }
+                }
+                if(bandera2){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n3 + " NO HA SIDO DECLARADA");
+                }:}
+              |Float:n1 Id:n2 Asig Id:n3 Resta Id:n4 ExprFinal{:
+                 boolean bandera = false;
+                 boolean bandera2 = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n3)){
+                        if(parser.listaIdentificadores.get(i-1).equals("float")){
+                            bandera2 = true;
+                            for(int j = 1;j < parser.listaIdentificadores.size();j=j+3){
+                                if(parser.listaIdentificadores.get(j).equals(n4)){
+                                    if(parser.listaIdentificadores.get(j-1).equals("float")){
+                                        parser.listaIdentificadores.add(n1);
+                                        parser.listaIdentificadores.add(n2);
+                                        parser.listaIdentificadores.add(Float.valueOf(parser.listaIdentificadores.get(i+1).toString()) - Float.valueOf(parser.listaIdentificadores.get(j+1).toString()));
+                                        System.out.println("Asignacion de la variable " + n2 + " Se le asigno el valor: " + (Float.valueOf(parser.listaIdentificadores.get(i+1).toString()) - Float.valueOf(parser.listaIdentificadores.get(j+1).toString())));
+                                        bandera = true;
+                                        break;
+                                    }else{
+                                       System.out.println("ERROR: LA VARIABLE " + n4 + " NO ES DE TIPO FLOTANTE");
+                                    }
+                                }
+                            }if(bandera){
+                                break;
+                            }else{
+                                System.out.println("ERROR:LA VARIABLE " + n4 + " NO HA SIDO DECLARADA");
+                            }
+                        }else{
+                            System.out.println("ERROR: LA VARIABLE " + n3 + " NO ES DE TIPO FLOTANTE");
+                        }
+                    }
+                }
+                if(bandera2){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n3 + " NO HA SIDO DECLARADA");
+                }:}
+              |Float:n1 Id:n2 Asig Id:n3 Multiplicacion Id:n4 ExprFinal{:
+                 boolean bandera = false;
+                 boolean bandera2 = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n3)){
+                        if(parser.listaIdentificadores.get(i-1).equals("float")){
+                            bandera2 = true;
+                            for(int j = 1;j < parser.listaIdentificadores.size();j=j+3){
+                                if(parser.listaIdentificadores.get(j).equals(n4)){
+                                    if(parser.listaIdentificadores.get(j-1).equals("float")){
+                                        parser.listaIdentificadores.add(n1);
+                                        parser.listaIdentificadores.add(n2);
+                                        parser.listaIdentificadores.add(Float.valueOf(parser.listaIdentificadores.get(i+1).toString()) * Float.valueOf(parser.listaIdentificadores.get(j+1).toString()));
+                                        System.out.println("Asignacion de la variable " + n2 + " Se le asigno el valor: " + (Float.valueOf(parser.listaIdentificadores.get(i+1).toString()) * Float.valueOf(parser.listaIdentificadores.get(j+1).toString())));
+                                        bandera = true;
+                                        break;
+                                    }else{
+                                       System.out.println("ERROR: LA VARIABLE " + n4 + " NO ES DE TIPO FLOTANTE");
+                                    }
+                                }
+                            }if(bandera){
+                                break;
+                            }else{
+                                System.out.println("ERROR:LA VARIABLE " + n4 + " NO HA SIDO DECLARADA");
+                            }
+                        }else{
+                            System.out.println("ERROR: LA VARIABLE " + n3 + " NO ES DE TIPO FLOTANTE");
+                        }
+                    }
+                }
+                if(bandera2){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n3 + " NO HA SIDO DECLARADA");
+                }:}
+              |Float:n1 Id:n2 Asig Id:n3 Division Id:n4 ExprFinal{:
+                 boolean bandera = false;
+                 boolean bandera2 = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n3)){
+                        if(parser.listaIdentificadores.get(i-1).equals("float")){
+                            bandera2 = true;
+                            for(int j = 1;j < parser.listaIdentificadores.size();j=j+3){
+                                if(parser.listaIdentificadores.get(j).equals(n4)){
+                                    if(parser.listaIdentificadores.get(j-1).equals("float")){
+                                        parser.listaIdentificadores.add(n1);
+                                        parser.listaIdentificadores.add(n2);
+                                        parser.listaIdentificadores.add(Float.valueOf(parser.listaIdentificadores.get(i+1).toString()) / Float.valueOf(parser.listaIdentificadores.get(j+1).toString()));
+                                        System.out.println("Asignacion de la variable " + n2 + " Se le asigno el valor: " + (Float.valueOf(parser.listaIdentificadores.get(i+1).toString()) / Float.valueOf(parser.listaIdentificadores.get(j+1).toString())));
+                                        bandera = true;
+                                        break;
+                                    }else{
+                                       System.out.println("ERROR: LA VARIABLE " + n4 + " NO ES DE TIPO FLOTANTE");
+                                    }
+                                }
+                            }if(bandera){
+                                break;
+                            }else{
+                                System.out.println("ERROR:LA VARIABLE " + n4 + " NO HA SIDO DECLARADA");
+                            }
+                        }else{
+                            System.out.println("ERROR: LA VARIABLE " + n3 + " NO ES DE TIPO FLOTANTE");
+                        }
+                    }
+                }
+                if(bandera2){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n3 + " NO HA SIDO DECLARADA");
+                }:}
 ;
 DECLARACION_STRING::=String:n1 Id:n2 ExprFinal{:
                  parser.listaIdentificadores.add(n1);
@@ -194,18 +690,18 @@ DECLARACION_STRING::=String:n1 Id:n2 ExprFinal{:
                     if(parser.listaIdentificadores.get(i).equals(n1)){
                         if(parser.listaIdentificadores.get(i-1).equals("string")){
                             parser.listaIdentificadores.set(i+1,n2);
-                            System.out.println("Declaracion de la variable " + n1 + " Se le asigno el valor: " + n2);
+                            System.out.println("Asignacion de la variable " + n1 + " Se le asigno el valor: " + n2);
                             bandera = true;
                             break;
                         }else{
-                            System.out.println("La variable encontrada no es de tipo string");
+                            System.out.println("ERROR: LA VARIABLE ENCOTRADA NO ES DE TIPO STRING");
                         }
                     }
                 }
                 if(bandera){
 
                 }else{
-                    System.out.println("La variable " + n1 + " no ha sido declarada");
+                    System.out.println("ERROR:LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
                 }
                :}
                |String:n1 Id:n2 Asig Id:n3 ExprFinal {:
@@ -216,52 +712,180 @@ DECLARACION_STRING::=String:n1 Id:n2 ExprFinal{:
                             parser.listaIdentificadores.add(n1);
                             parser.listaIdentificadores.add(n2);
                             parser.listaIdentificadores.add(parser.listaIdentificadores.get(i+1));
-                            System.out.println("Declaracion de la variable " + n2 + " Se le asigno el valor: " + parser.listaIdentificadores.get(i+1));
+                            System.out.println("Asignacion de la variable " + n2 + " Se le asigno el valor: " + parser.listaIdentificadores.get(i+1));
                             bandera = true;
                             break;
                         }else{
-                            System.out.println("La variable encontrada no es de tipo string");
+                            System.out.println("ERROR: LA VARIABLE ENCONTRADA NO ES DE TIPO STRING");
                         }
                     }
                 }
                 if(bandera){
 
                 }else{
-                    System.out.println("La variable " + n1 + " no ha sido declarada");
+                    System.out.println("ERROR: LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
                 }
                :}
              |Id:n1 Asig Id:n2 ExprFinal {:
                 boolean bandera = false;
+                boolean bandera2 = false;
                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
                     if(parser.listaIdentificadores.get(i).equals(n1)){
-                        if(parser.listaIdentificadores.get(i-1).equals("string")){
+                            bandera2=true;
                             for(int j = 1;j < parser.listaIdentificadores.size();j=j+3){
                                 if(parser.listaIdentificadores.get(j).equals(n2)){
-                                    if(parser.listaIdentificadores.get(j-1).equals("string")){
-                                        parser.listaIdentificadores.add("string");
+                                    if(parser.listaIdentificadores.get(j-1).equals(parser.listaIdentificadores.get(i-1))){
+                                        parser.listaIdentificadores.add(parser.listaIdentificadores.get(j-1));
                                         parser.listaIdentificadores.add(n1);
                                         parser.listaIdentificadores.add(parser.listaIdentificadores.get(j+1));
-                                        System.out.println("Declaracion de la variable " + n1 + " Se le asigno el valor: " + parser.listaIdentificadores.get(j+1));
+                                        System.out.println("Asignacion de la variable " + n1 + " Se le asigno el valor: " + parser.listaIdentificadores.get(j+1));
                                         bandera = true;
                                         break;
                                     }else{
-                                        System.out.println("La variable encontrada no es String");
+                                        System.out.println("ERROR: ASIGNACION INCOMPATIBLE LAS VARIABLES NO PERTENECEN AL MISMO TIPO DE DATO");
                                     }
                                 }
                             }if(bandera){
                                 break;
                             }else{
-                                System.out.println("La variable " + n1 + " no ha sido declarada");
+                                System.out.println("ERROR: LA VARIABLE " + n2 + " NO HA SIDO DECLARADA");
                             }
+                    }
+                }if(bandera){
+                    
+                }else{
+                   System.out.println("ERROR: LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
+                }
+             :}
+;
+DECLARACION_CHAR::=CharType:n1 Id:n2 ExprFinal{:
+                 parser.listaIdentificadores.add(n1);
+                 parser.listaIdentificadores.add(n2);
+                 parser.listaIdentificadores.add(0);
+                 System.out.println("Declaracion de variable Char: " +n2 + " sin valor");:}
+               |CharType:n1 Id:n2 Asig Char:n3 ExprFinal{:
+                  parser.listaIdentificadores.add(n1);
+                  parser.listaIdentificadores.add(n2);
+                  parser.listaIdentificadores.add(n3);
+                  System.out.println("Declaracion de variable Char "+ n2 + " con valor " + n3);:}
+               |Id:n1 Asig Char:n2 ExprFinal {:
+                boolean bandera = false;
+                for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n1)){
+                        if(parser.listaIdentificadores.get(i-1).equals("char")){
+                            parser.listaIdentificadores.set(i+1,n2);
+                            System.out.println("Asignacion de la variable " + n1 + " Se le asigno el valor: " + n2);
+                            bandera = true;
+                            break;
                         }else{
-                            System.out.println("La variable encontrada no es de tipo string");
+                            System.out.println("ERROR: LA VARIABLE ENCOTRADA NO ES DE TIPO CHAR");
                         }
                     }
                 }
                 if(bandera){
 
                 }else{
-                    System.out.println("La variable " + n1 + " no ha sido declarada");
+                    System.out.println("ERROR:LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
                 }
-             :}
+               :}
+              |CharType:n1 Id:n2 Asig Id:n3 ExprFinal {:
+                 boolean bandera = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n3)){
+                        if(parser.listaIdentificadores.get(i-1).equals("char")){
+                            parser.listaIdentificadores.add(n1);
+                            parser.listaIdentificadores.add(n2);
+                            parser.listaIdentificadores.add(parser.listaIdentificadores.get(i+1));
+                            System.out.println("Asignacion de la variable " + n2 + " Se le asigno el valor: " + parser.listaIdentificadores.get(i+1));
+                            bandera = true;
+                            break;
+                        }else{
+                            System.out.println("ERROR: LA VARIABLE ENCONTRADA NO ES DE TIPO CHAR");
+                        }
+                    }
+                }
+                if(bandera){
+
+                }else{
+                    System.out.println("ERROR: LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
+                }
+               :}
+;
+DECLARACION_BOOLEAN::=Bool:n1 Id:n2 ExprFinal{:
+                 parser.listaIdentificadores.add(n1);
+                 parser.listaIdentificadores.add(n2);
+                 parser.listaIdentificadores.add(0);
+                 System.out.println("Declaracion de variable Boolean: " +n2 + " sin valor");:}
+               |Bool:n1 Id:n2 Asig True:n3 ExprFinal{:
+                  parser.listaIdentificadores.add(n1);
+                  parser.listaIdentificadores.add(n2);
+                  parser.listaIdentificadores.add(n3);
+                  System.out.println("Declaracion de variable Boolean "+ n2 + " con valor " + n3);:}
+               |Bool:n1 Id:n2 Asig False:n3 ExprFinal{:
+                  parser.listaIdentificadores.add(n1);
+                  parser.listaIdentificadores.add(n2);
+                  parser.listaIdentificadores.add(n3);
+                  System.out.println("Declaracion de variable Boolean "+ n2 + " con valor " + n3);:}
+               |Id:n1 Asig True:n2 ExprFinal {:
+                boolean bandera = false;
+                for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n1)){
+                        if(parser.listaIdentificadores.get(i-1).equals("bool")){
+                            parser.listaIdentificadores.set(i+1,n2);
+                            System.out.println("Asignacion de la variable " + n1 + " Se le asigno el valor: " + n2);
+                            bandera = true;
+                            break;
+                        }else{
+                            System.out.println("ERROR: LA VARIABLE ENCOTRADA NO ES DE TIPO BOOLEAN");
+                        }
+                    }
+                }
+                if(bandera){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
+                }
+               :}
+             |Id:n1 Asig False:n2 ExprFinal {:
+                boolean bandera = false;
+                for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n1)){
+                        if(parser.listaIdentificadores.get(i-1).equals("bool")){
+                            parser.listaIdentificadores.set(i+1,n2);
+                            System.out.println("Asignacion de la variable " + n1 + " Se le asigno el valor: " + n2);
+                            bandera = true;
+                            break;
+                        }else{
+                            System.out.println("ERROR: LA VARIABLE ENCOTRADA NO ES DE TIPO BOOLEAN");
+                        }
+                    }
+                }
+                if(bandera){
+
+                }else{
+                    System.out.println("ERROR:LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
+                }
+               :}
+             |Bool:n1 Id:n2 Asig Id:n3 ExprFinal {:
+                 boolean bandera = false;
+                 for(int i = 1;i < parser.listaIdentificadores.size();i=i+3){
+                    if(parser.listaIdentificadores.get(i).equals(n3)){
+                        if(parser.listaIdentificadores.get(i-1).equals("bool")){
+                            parser.listaIdentificadores.add(n1);
+                            parser.listaIdentificadores.add(n2);
+                            parser.listaIdentificadores.add(parser.listaIdentificadores.get(i+1));
+                            System.out.println("Asignacion de la variable " + n2 + " Se le asigno el valor: " + parser.listaIdentificadores.get(i+1));
+                            bandera = true;
+                            break;
+                        }else{
+                            System.out.println("ERROR: LA VARIABLE ENCONTRADA NO ES DE TIPO BOOLEAN");
+                        }
+                    }
+                }
+                if(bandera){
+
+                }else{
+                    System.out.println("ERROR: LA VARIABLE " + n1 + " NO HA SIDO DECLARADA");
+                }
+               :}
 ;
