@@ -1,10 +1,11 @@
 int main(){
-	int num = 12#
-	int num4 = 55#
 	int val#
-    	int num2 =2+1#
+    	int num = 12#
+	int num23=2#
+    	int num2=2+2*5/7*8#
     	int num3 = 5/5#
-   	val = 7#
+   	int num4 = 5#
+   	val = num4+num+num23#
     	int num5 = 10-2#
 	int num19 = num2#
 	val = num3#
@@ -12,13 +13,15 @@ int main(){
 	int num22 = num4 - num#
 	int num23 = num4 * num#
 	int num24 = num4 / num#
-	val = num4 + num#
+	int val1#
+	val1 = num4#
+	val=val1#
 	val = num4 - num#
 	val = num4 * num#
 	val = num4 / num#
-	
+
     	float num6#
-    	float num7 = 15.7 / 15.7#
+    	float num7 = 15.7 / 15.7*5.1#
     	float num8 = 16.7#
     	float num9 = 15.5 + 15.5#
     	float num10 = 15.6 *17.6#
@@ -35,7 +38,7 @@ int main(){
     	float num16 = 5 * 2.7#
     	float num17 = 9.9 - 9#
     	float num18 = 10 - 9.9#
-	float num25 = num8 + num9#
+	float num25 = num8 + num9+num24#
 	float num26 = num8 - num9#
 	float num27 = num8 * num9#
 	float num28 = num8 / num9#
@@ -57,7 +60,7 @@ int main(){
 	char myvar3 = myvar#
 	myvar3 = myvar2#
 
-	bool x#
+	bool x2we#
 	bool x1 = true#
 	bool x2 = false#
 	bool x = true#
@@ -65,6 +68,24 @@ int main(){
 	x = true#
 	x3 = false#
 	x2 = x1#
-}
+	
+	read("hola")#
+	while(x==4){
+		num=num12#
+	}
+	if(x==0){
+		if(x2==x){
+			if(x3==x){
+				num=num12#
+			}
+		}
+	}
+	print(num+num4)#
+	x1=x2#
+	
 
+
+
+
+}
 

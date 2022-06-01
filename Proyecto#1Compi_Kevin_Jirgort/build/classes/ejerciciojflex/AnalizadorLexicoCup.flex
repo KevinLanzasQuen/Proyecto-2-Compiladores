@@ -72,15 +72,11 @@ SaltoDeLinea = \n|\r|\r\n
 
 ("float") {return new Symbol(sym.Float, yychar, yyline, yytext());}
 
-("string") {return new Symbol(sym.String, yychar, yyline, yytext());}
+("bool") {return new Symbol(sym.Bool, yychar, yyline, yytext());}
 
 ("char") {return new Symbol(sym.CharType, yychar, yyline, yytext());}
 
-("bool") {return new Symbol(sym.Bool, yychar, yyline, yytext());}
-
-("true") {return new Symbol(sym.True, yychar, yyline, yytext());}
-
-("false") {return new Symbol(sym.False, yychar, yyline, yytext());}
+("string") {return new Symbol(sym.String, yychar, yyline, yytext());}
 
 ("if") {return new Symbol(sym.If, yychar, yyline, yytext());}
 
@@ -128,6 +124,24 @@ SaltoDeLinea = \n|\r|\r\n
 
 (":") {return new Symbol(sym.DosPuntos, yychar, yyline, yytext());}
 
+("==") {return new Symbol(sym.IgualIgual, yychar, yyline, yytext());}
+
+("!=") {return new Symbol(sym.Diferente, yychar, yyline, yytext());}
+
+("<") {return new Symbol(sym.Menor, yychar, yyline, yytext());}
+
+("<=") {return new Symbol(sym.MenorIgual, yychar, yyline, yytext());}
+
+(">") {return new Symbol(sym.Mayor, yychar, yyline, yytext());}
+
+(">=") {return new Symbol(sym.Mayor, yychar, yyline, yytext());}
+
+("!") {return new Symbol(sym.Negacion, yychar, yyline, yytext());}
+
+("||") {return new Symbol(sym.Or, yychar, yyline, yytext());}
+
+("&&") {return new Symbol(sym.And, yychar, yyline, yytext());}
+
 ("++"|"--") {return new Symbol(sym.DecInc, yychar, yyline, yytext());}
 
 ("main") {return new Symbol(sym.main, yychar, yyline, yytext());}
@@ -152,9 +166,7 @@ SaltoDeLinea = \n|\r|\r\n
  return new Symbol(sym.ExprLogica, yychar, yyline, yytext());
 }
 
-{comparadores} {
-  return new Symbol(sym.Comparador, yychar, yyline, yytext());
-}
+
 
 {boolean}* {
  return new Symbol(sym.Boolean, yychar, yyline, yytext());
